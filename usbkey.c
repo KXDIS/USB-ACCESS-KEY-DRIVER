@@ -25,6 +25,8 @@ module_param(serial,charp,0444);
 //conditional if the USB is inserted. This will be default set to false.
 static bool key_present = false;
 
+module_param(key_present,bool,0444);
+
 
 //udev refers to all of the info of the USB device
 static bool isCorrectKey(struct usb_device *udev){

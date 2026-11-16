@@ -42,18 +42,25 @@ while (1){
 
     if(state != last_state){ 
         if (state == -1){
-            printf("Daemon: kernel module is not loaded");
+            printf("Daemon: kernel module is not loaded\n");
         }else if(state == 1){
-            printf("Daemon: VALID KEY inserted");
+            printf("Daemon: VALID KEY inserted\n");
         }else {
-            printf("Daemon: INVALID KEY inserted");
+            printf("Daemon: INVALID KEY inserted\n");
         }
-    }
-    fflush(stdout);
+           fflush(stdout);
+        //I did
 
+        //remember state for next loop iteration.
     last_state = state;
+    }
+
+    //wait another second to check again
+    sleep(1);
 }
-  
+
+
+  return 0;
 
 }
 
