@@ -46,7 +46,7 @@ while (1){
         }else if(state == 1){
             printf("Daemon: VALID KEY inserted\n");
         }else {
-            printf("Daemon: INVALID KEY inserted\n");
+            printf("Daemon: KEY NOT INSERTED inserted\n");
         }
            fflush(stdout);
         //I did

@@ -58,13 +58,13 @@ static int usb_event(struct notifier_block *nb, unsigned long action, void *data
           key_present = true;
           pr_info("usbkey: CORRECT KEY INSERTED\n");
           }else{
-            pr_info("usbkey: WRONG USB, USB IGNORED");
+            pr_info("usbkey: WRONG USB, USB IGNORED\n");
           } 
 
       }else if (action == USB_DEVICE_REMOVE){
         if (isCorrectKey(udev)){
           key_present = false;
-          pr_info("usbkey: USB REMOVED"); 
+          pr_info("usbkey: USB REMOVED\n"); 
         }
       }
   return NOTIFY_OK;
@@ -101,7 +101,7 @@ static int __init usbkey_start(void){
 
     usb_for_each_dev(NULL,check_already_plugged_in);
 
-    pr_info("usbkey: STARTED: WAITING FOR USB KEY INSERTION\n");
+    pr_info("usbkey: STARTED: MONITORING FOR USB KEY\n");
 
     return 0;
 }
