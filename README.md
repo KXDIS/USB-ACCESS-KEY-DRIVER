@@ -29,7 +29,17 @@ sudo insmod usbkey.ko vid=0x13fe pid=0x6300 serial="07192164148CE881"
 Now insert and remove the USB key. The kernel messages and the daemon's output appear in the terminal as it happens.
 
 ### 5. Stop
+#### To stop all jobs running:
 ```
-sudo rmmod usbkey
-kill %1 %2
+pkill -x usbkeyd
+pkill -x dmesg
 ```
+
+
+
+if its not lit af: 
+```
+sudo pkill -x usbkeyd
+```
+
+
