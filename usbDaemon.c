@@ -37,8 +37,22 @@ void unlock_file(const char *file){
 
 }
 
-void lock_file(const char *file,mode_t mode){
-    chmod(CONFIG_FILE, mode);
+lock_file(const char *file, mode_t mode){
+    //open and read the file in the CONFIG_FILE variable
+    FILE *config = fopen(CONFIG_FILE, "r");
+    
+    //if can't open file print error
+    if (config == NULL) {
+        perror("FILE: Error opening file");
+        return 1;
+    }
+
+    char line [256];
+    while (fgets(line, sizeof(line), config) != NULL) {
+        chmod(line, mode);
+    }
+
+
 }
 
 int main (void){
