@@ -1,5 +1,13 @@
 # CUSTOM USB ACCESS KEY DEVICE DRIVER
 
+## How to get USB info
+Get the vid:pid:
+`lsusb`
+
+Get the serial number
+`sudo lsusb -v -d <vid>:<pid> | grep iSerial`
+
+
 ## How to run
 
 ### 1. Build the module and daemon

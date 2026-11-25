@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <unistd.h>
+#include <string.h>
 
 //Library to alter file permissions
 #include <sys/stat.h>
@@ -32,30 +33,107 @@ int read_key_state (void){
 }
 
 
+//UNLOCK FILE METHOD
 void unlock_file(const char *file){
-    chmod(CONFIG_FILE, 0775);
-
-}
-
-lock_file(const char *file, mode_t mode){
     //open and read the file in the CONFIG_FILE variable
     FILE *config = fopen(CONFIG_FILE, "r");
     
     //if can't open file print error
     if (config == NULL) {
-        perror("FILE: Error opening file");
-        return 1;
+        perror("FILE: Error opening file\n");
+        return;
     }
 
+
+
+    //create line variable (array of chars)
     char line [256];
+    
+    //walk through the file one line at a time
     while (fgets(line, sizeof(line), config) != NULL) {
-        if (chmod(line, mode) == 0) {
-            printf("FILE: file lock success at %s", file);
+        
+        // clean line input
+        if (strchr(line, '\n') == NULL && !feof(config)) {
+            fprintf(stderr, "FILE: Path too long, skipping line\n");
+            int ch;
+            while ((ch = fgetc(config)) != '\n' && ch != EOF); // Flush rest of line
+            continue;
+        }
+
+        // strip trailing newline ('\n') and return ('\r')
+        line[strcspn(line, "\r\n")] = '\0';
+
+        // skip empty lines or comment lines starting with '#'
+        if (line[0] == '\0' || line[0] == '#') {
+            continue;
+        }
+        
+        
+
+        //lock the file path at the current line
+        if (chmod(line, 0775) == 0) {
+            printf("FILE: file unlock success at %s\n", line);
         } else {
-            printf("FILE: file lock failed at %s", file);
+            printf("FILE: file unlock failed at %s\n", line);
         }
 
     }
+
+    //close the file
+    fclose(config);
+
+
+
+}
+
+//LOCK FILE METHOD
+void lock_file(const char *file, mode_t mode){
+    //open and read the file in the CONFIG_FILE variable
+    FILE *config = fopen(CONFIG_FILE, "r");
+    
+    //if can't open file print error
+    if (config == NULL) {
+        perror("FILE: Error opening file\n");
+        return;
+    }
+
+
+
+    //create line variable (array of chars)
+    char line [256];
+    
+    //walk through the file one line at a time
+    while (fgets(line, sizeof(line), config) != NULL) {
+        
+        // clean line input
+        if (strchr(line, '\n') == NULL && !feof(config)) {
+            fprintf(stderr, "FILE: Path too long, skipping line\n");
+            int ch;
+            while ((ch = fgetc(config)) != '\n' && ch != EOF); // Flush rest of line
+            continue;
+        }
+
+        // strip trailing newline ('\n') and return ('\r')
+        line[strcspn(line, "\r\n")] = '\0';
+
+        // skip empty lines or comment lines starting with '#'
+        if (line[0] == '\0' || line[0] == '#') {
+            continue;
+        }
+        
+        
+
+        //lock the file path at the current line
+        if (chmod(line, mode) == 0) {
+            printf("FILE: file lock success at %s\n", line);
+        } else {
+            printf("FILE: file lock failed at %s\n", line);
+        }
+
+    }
+
+    //close the file
+    fclose(config);
 
 
 }
@@ -99,7 +177,7 @@ int main (void){
                 unlock_file(CONFIG_FILE);
                 printf("Daemon: FILE UNLOCKED\n");
             }else{
-                lock_file(CONFIG_FILE,file_info.st_mode);
+                lock_file(CONFIG_FILE,0000);
                 printf("Daemon: FILE LOCKED\n");
             }
             fflush(stdout);
