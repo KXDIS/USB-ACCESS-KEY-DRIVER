@@ -49,7 +49,12 @@ lock_file(const char *file, mode_t mode){
 
     char line [256];
     while (fgets(line, sizeof(line), config) != NULL) {
-        chmod(line, mode);
+        if (chmod(line, mode) == 0) {
+            printf("FILE: file lock success at %s", file);
+        } else {
+            printf("FILE: file lock failed at %s", file);
+        }
+
     }
 
 
